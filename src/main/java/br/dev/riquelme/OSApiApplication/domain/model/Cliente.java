@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package br.dev.riquelme.OsApiApplication.domain.model;
+package br.dev.riquelme.OSApiApplication.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -101,3 +97,4 @@ public class Cliente {
     
     
 }
+
