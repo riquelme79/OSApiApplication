@@ -6,9 +6,11 @@ package br.dev.riquelme.OSApiApplication.domain.service;
 
 import br.dev.riquelme.OSApiApplication.domain.exception.DomainException;
 import br.dev.riquelme.OSApiApplication.domain.model.Cliente;
+import br.dev.riquelme.OSApiApplication.domain.model.Comentario;
 import br.dev.riquelme.OSApiApplication.domain.model.OrdemServico;
 import br.dev.riquelme.OSApiApplication.domain.model.StatusOrdemServico;
 import br.dev.riquelme.OSApiApplication.domain.repository.ClienteRepository;
+import br.dev.riquelme.OSApiApplication.domain.repository.ComentarioRepository;
 import br.dev.riquelme.OSApiApplication.domain.repository.OrdemServicoRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +26,9 @@ public class OrdemServicoService {
     
     @Autowired
     private ClienteRepository clienteRepository;
+    
+    @Autowired
+    private ComentarioRepository comentarioRepository;
     
     public OrdemServico criar(OrdemServico ordemServico) 
     {
@@ -84,5 +89,19 @@ public class OrdemServicoService {
         } else {
             throw new DomainException("Não existe OS com o id " + ordemServicoID);
         }
+    }
+    
+    
+    public Comentario adicionarComentario(Long ordemServicoID, String descricao) {
+        
+        OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoID)
+                .orElseThrow(() -> new DomainException("Ordem de serviço não encontrada"));
+        
+        Comentario comentario = new Comentario();
+        comentario.setDataEnvio(LocalDateTime.now());
+        comentario.setDescricao(descricao);
+        comentario.setOrdemServico(ordemServico);
+        
+        return comentarioRepository.save(comentario);
     }
 }
