@@ -1,5 +1,6 @@
 package br.dev.riquelme.OSApiApplication.domain.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,20 +12,24 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Cliente {
-    
+
+    @Schema(name = "Cliente ID", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
+    @Schema(name = "Cliente ", example = "Riquelme")
     @NotBlank
     @Size(max = 60)
     private String nome;
     
+    @Schema(name = "Product ID", example = "riquelme@email.com")
     @NotBlank
     @Email
     @Size(max = 255)
     private String email;
     
+    @Schema(name = "Product ID", example = "+551179118-6666")
     @NotBlank
     @Size(max = 20)
     @Column(name = "telefone")
@@ -32,7 +37,6 @@ public class Cliente {
 
     public Cliente() {
     }
-
 
     public Cliente(long id, String nome, String email, String fone) {
         this.id = id;
@@ -94,7 +98,5 @@ public class Cliente {
         final Cliente other = (Cliente) obj;
         return this.id == other.id;
     }
-    
-    
-}
 
+}

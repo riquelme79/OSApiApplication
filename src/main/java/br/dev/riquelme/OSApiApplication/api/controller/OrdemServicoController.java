@@ -8,6 +8,9 @@ import br.dev.riquelme.OSApiApplication.domain.dto.AtualizaStatusDTO;
 import br.dev.riquelme.OSApiApplication.domain.model.OrdemServico;
 import br.dev.riquelme.OSApiApplication.domain.repository.OrdemServicoRepository;
 import br.dev.riquelme.OSApiApplication.domain.service.OrdemServicoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +48,13 @@ public class OrdemServicoController {
     public List<OrdemServico> listas() {
         return ordemServicoRepository.findAll();
     }
+    
+    @Operation(summary = "Listar ordem de serviço pelo id", description = "Retorna uma ordem de serviço pelo id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully"
+                + "retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - Ordem de serviço não encontrada")
+    })
     
     @GetMapping("/listar/{id}")
     public ResponseEntity<OrdemServico> buscar(@PathVariable Long id) {

@@ -7,6 +7,9 @@ package br.dev.riquelme.OsApiApplication.api.controller;
 import br.dev.riquelme.OSApiApplication.domain.repository.ClienteRepository;
 import br.dev.riquelme.OSApiApplication.domain.service.ClienteService;
 import br.dev.riquelme.OSApiApplication.domain.model.Cliente;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
@@ -27,20 +30,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ClienteController {
-    
+
     @Autowired
     private ClienteRepository clienteRepository;
-    
+
     @Autowired
     private ClienteService clienteService;
     
+    @Operation(summary = "Lista todos os clientes", description = "Retorna todos os clietes")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully"
+                + "retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - Não foram encontrados clientes")
+    })
+
     @GetMapping("/clientes")
     public List<Cliente> listas() {
-          return clienteRepository.findAll();
+        return clienteRepository.findAll();
 //        return clienteRepository.findByNome("KGe");
 //        return clienteRepository.findByNomeContaining("Silva");
     }
-    
+
+    @Operation(summary = "Lista um cliente por seu id", description = "Retorna um cliente pelo id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully"
+                + "retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - Não foi possível encontrar o cliente")
+    })
+
     @GetMapping("/clientes/{clienteID}")
     public ResponseEntity<Cliente> buscar(@PathVariable Long clienteID) {
         Optional<Cliente> cliente = clienteRepository.findById(clienteID);
@@ -51,39 +68,61 @@ public class ClienteController {
         }
     }
     
+    @Operation(summary = "Insira um cliente", description = "Adiciona um cliente ao banco de dados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully"
+                + "retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - Não"
+                + "foi possível inserir um novo cliente")
+    })
+    
     @PostMapping("/clientes")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-        
+
         return clienteService.salvar(cliente);
     }
+    
+    @Operation(summary = "Atualize as informações de um cliente pelo seu id",
+            description = "Atualiza as informações do cliente pelo id no banco de dados")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully"
+                + "retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - Não foi possível atualizar as informações")
+    })
     
     @PutMapping("/clientes/{clienteID}")
     public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteID,
             @RequestBody Cliente cliente) {
-        
+
         if (!clienteRepository.existsById(clienteID)) {
             return ResponseEntity.notFound().build();
         }
-        
+
         cliente.setId(clienteID);
         cliente = clienteService.salvar(cliente);
         return ResponseEntity.ok(cliente);
-        
+
     }
+    
+    @Operation(summary = "Excluir um cliente por id", description = "Deleta um cliente do"
+            + "banco de dados por seu id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully"
+                + "retrieved"),
+        @ApiResponse(responseCode = "404", description = "Not found - Cliente não encontrado ")
+    })
     
     @DeleteMapping("/clientes/{clienteID}")
     public ResponseEntity<Void> excluir(@PathVariable Long clienteID) {
-        
+
         if (!clienteRepository.existsById(clienteID)) {
             return ResponseEntity.notFound().build();
         }
-        
+
         clienteService.excluir(clienteID);
         return ResponseEntity.noContent().build();
-        
-    }
-    
-}
-    
 
+    }
+
+}

@@ -14,6 +14,7 @@ import jakarta.persistence.EnumType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import br.dev.riquelme.OSApiApplication.domain.model.Cliente;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
@@ -22,13 +23,18 @@ import java.util.Objects;
 
 @Entity
 public class OrdemServico {
+    
+    @Schema(name = "ID da Ordem de Serviço", example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Schema(name = "Cliente associado à ordem serviço")
     @ManyToOne
     private Cliente cliente;
     
+    @Schema(name = "Lista de comentários registradas na ordem de servico",
+            accessMode = Schema.AccessMode.READ_ONLY)
     @OneToMany(mappedBy = "ordemServico")
     private List<Comentario> comentarios = new ArrayList<>();
 
@@ -40,9 +46,13 @@ public class OrdemServico {
         this.comentarios = comentarios;
     }
     
+    @Schema(name = "Descrição da ordem de serviço", example = "Troca de bateria A54 5G")
     private String descricao;
+    
+    @Schema(name = "Preço da ordem de serviço", example = "100.00")
     private BigDecimal preco;
     
+    @Schema(name = "Status atual da ordem", example = "ABERTA")
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico status;
     
@@ -134,6 +144,9 @@ public class OrdemServico {
         return Objects.equals(this.id, other.id);
     }
     
+    @Schema(name = "Data e hora abertura", example = "2026-03-06T08:00:00")
     private LocalDateTime dataAbertura;
+    
+    @Schema(name = "Data e hora finalização", example = "2026-03-11T17:10:56")
     private LocalDateTime dataFinalizacao;
 }
